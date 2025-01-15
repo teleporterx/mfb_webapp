@@ -105,14 +105,135 @@ And it does!...
 
 - Or, another possible solution for listing out the open ended schemes is to use caching.
 
+**Updated Service Script**
+```python
+# /api/v1/services/rapidapi_mutfund.py
+
+import httpx
+from api.v1.config import CONFIG
+import urllib.parse
+
+class RapidAPIService:
+    @staticmethod
+    async def fetch_latest_open_ended_schemes():
+        """
+        Fetch all the open ended schemes
+        """
+
+        url = f"{CONFIG['RAPID_URL']}/latest?Scheme_Type=Open"
+        headers = {
+            "X-RapidAPI-Key": CONFIG["RAPID_MUT_FUND_KEY"],
+            "X-RapidAPI-Host": "latest-mutual-fund-nav.p.rapidapi.com"
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return response.json()
+        
+    @staticmethod
+    async def fetch_latest_ff_open_ended_schemes(fund_family):
+        """
+        Fetch latest schemes for the selected fund family from the /latest endpoint.
+        Fetches all mutual fund schemes without any built-in filtering 
+        """
+        # Encode the string for use in a URL
+        encoded_fund_family = urllib.parse.quote(fund_family)
+
+        url = f"{CONFIG['RAPID_URL']}/latest?Scheme_Type=Open&Mutual_Fund_Family={encoded_fund_family}"
+        headers = {
+            "X-RapidAPI-Key": CONFIG["RAPID_MUT_FUND_KEY"],
+            "X-RapidAPI-Host": "latest-mutual-fund-nav.p.rapidapi.com"
+        }
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return response.json()
+```
+
 ## 3. Endpoints Implementation
 
 ### 3.1. Fund Families (GET /v1/fund_families)
 
 **Purpose:** Fetch all open ended schemes and filter all families using the /latest endpoint.
 
-### 3.2. Open Ended Schemes for a Fund Family (GET /v1/fund_schemes/latest/open_ended)
+**Implementation**:
+```python
+@router.get("/fund_families")
+async def get_fund_families(
+    authorization: str = Header(None)
+    ):
+    """
+    Fetch all open ended schemes and filter all families using the /latest endpoint.
+    """
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="Authorization token is missing.")
+    
+    # Extract the token from "Bearer <token>"
+    token_prefix = "Bearer "
+    if not authorization.startswith(token_prefix):
+        raise HTTPException(status_code=401, detail="Invalid authorization code.")
+    
+    token = authorization[len(token_prefix):]  # Get the actual token
+
+    try:
+        current_user = AuthSecurity.get_current_user(token)
+        # Fetch data from RapidAPI
+        all_open_ended_schemes = await RapidAPIService.fetch_latest_open_ended_schemes()
+
+        # Extract and filter fund families from all schemes
+        fund_families = list(set(scheme["Mutual_Fund_Family"] for scheme in all_open_ended_schemes))
+
+        if not fund_families:
+            raise HTTPException(status_code=404, detail="No fund families found!")
+
+        return {"status": "success", "fund_families": fund_families}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+```
+
+### 3.2. Open Ended Schemes for a Fund Family (POST /v1/fund_schemes/latest/open_ended)
 
 **Purpose:** Filter out selected fund family and associated details.
 
 **Request**: `authorization Bearer <token>`
+
+**Implementation**:
+```python
+@router.post("/fund_schemes/latest/open_ended")
+async def get_open_ended_latest_schemes(
+    request: FundFamilyRequest,
+    authorization: str = Header(None)
+):
+    """
+    Filter out selected fund family and associated details.
+    """
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="Authorization token is missing.")
+
+    # Extract the token from "Bearer <token>"
+    token_prefix = "Bearer "
+    if not authorization.startswith(token_prefix):
+        raise HTTPException(status_code=401, detail="Invalid authorization header format.")
+    
+    token = authorization[len(token_prefix):]  # Get the actual token
+
+    try:
+        # Validate and decode the token
+        current_user = AuthSecurity.get_current_user(token)
+
+        # Fetch data from RapidAPI
+        all_schemes = await RapidAPIService.fetch_latest_ff_open_ended_schemes(request.fund_family)
+
+        return {"status": "success", "data": all_schemes}
+    
+    except HTTPException as e:
+        raise e  # Re-raise HTTP exceptions
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+```
+
+### 3.3. Buy Mutual Fund Units (POST /v1/buy)

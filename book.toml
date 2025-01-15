@@ -1,6 +1,13 @@
 [book]
-authors = []
+authors = ["TeleporterX"]
 language = "en"
 multilingual = false
 src = "src"
 title = "Mutual Fund Broker Web Application"
+
+[output.html]
+default-theme = "rust"
+
+# Enable collapsible sections in the sidebar
+[output.html.fold]
+enable = true

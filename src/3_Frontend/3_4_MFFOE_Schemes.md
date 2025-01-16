@@ -4,6 +4,9 @@
 
 ![FF Open Ended](assets/fetched.png)
 
+**API key error**
+![API key error](assets/api_key_error.png)
+
 ## Click Counter
 Click on a mutual fund to view details and specify number of units to be bought.
 

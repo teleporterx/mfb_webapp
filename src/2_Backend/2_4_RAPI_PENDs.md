@@ -303,7 +303,8 @@ async def get_fund_families(
 **Response (Error):**
 ```json
 {
-    "detail": "Internal server error: <detail>"
+    "detail": "Internal server error: Client error '403 Forbidden' for url 'https://latest-mutual-fund-nav.p.rapidapi.com/latest?Scheme_Type=Open&Mutual_Fund_Family=Aditya%20Birla%20Sun%20Life%20Mutual%20Fund' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+    // or the backend offline error
 }
 ```
 
@@ -546,6 +547,3 @@ async def get_portfolio(authorization: str = Header(None)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 ```
-
-### 3.4. Track the NAV and Total Cost of Each Scheme Hourly ()
-

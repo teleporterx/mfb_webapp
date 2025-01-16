@@ -17,7 +17,7 @@
 |14|Implement an API endpoint for purchasing mutual fund units.|✅|
 |15|Sign up for RapidAPI and obtain the required API key.|✅|
 |16|Fetch open-ended schemes based on the selected fund family using RapidAPI.|✅|
-|17|Provide clear documentation for setting up both the frontend and backend.|❌|
-|18|Include instructions on using the dummy credentials from the environment file and integrating the RapidAPI key.|❌|
+|17|Provide clear documentation for setting up both the frontend and backend.|✅|
+|18|Include instructions on using the dummy credentials from the environment file and integrating the RapidAPI key.|✅|
 |19|Create the full-stack web application (frontend and backend) from scratch.|✅|
-|20|Provide detailed instructions for setting up and running the application locally.|❌|
+|20|Provide detailed instructions for setting up and running the application locally.|✅|

@@ -12,3 +12,12 @@ Click on a mutual fund to view details and specify number of units to be bought.
 **Successful Purchase**
 
 ![Buy Create](assets/buy_create.png)
+
+## Portfolio
+
+
+![Portfolio](assets/portfolio.png)
+
+**Backend Offline**
+
+![Backend Offline](assets/portfolio_bo.png)

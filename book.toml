@@ -6,7 +6,7 @@ src = "src"
 title = "Mutual Fund Broker Web Application"
 
 [output.html]
-default-theme = "rust"
+default-theme = "Rust"
 
 # Enable collapsible sections in the sidebar
 [output.html.fold]

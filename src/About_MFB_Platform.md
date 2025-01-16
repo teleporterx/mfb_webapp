@@ -6,12 +6,12 @@ The platform includes the following key features:
 1. **Account Management:**
     
     Users can create accounts using email and password.
-    They can log in securely to access their investment portfolio.
+    They can log in and securely to access their investment portfolio.
 
 2. **Mutual Fund Selection:**
 
     Users can browse various mutual funds available in the market.
-    The platform may allow users to search for **funds by family**, **scheme type** (open-ended or close-ended), asset class, risk level, and other criteria.
+    The platform may allow users to search for **funds by family**, **scheme type** (open-ended or close-ended) and view the details.
 
 3. **Integration with APIs:**
 

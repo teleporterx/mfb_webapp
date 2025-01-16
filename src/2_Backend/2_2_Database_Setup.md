@@ -40,6 +40,13 @@ sudo docker start|stop mongoose
 
 The class utilizes `AsyncIOMotorClient` for asynchronous database access, supporting operations like inserting, querying, and updating data, while ensuring non-blocking I/O operations.
 
+## MongoDB Compass:
+
+- For checking DB schema and data we can use tools like mongosh.
+- MongoDB compass offers a GUI interface for managing MongoDB databases which is more intuitive and user-friendly for altering/validating the database structure on the go.
+
+![MongoDB Compass](assets/mongodb_compass.png)
+
 ## Implementation:
 
 Refer the docstrings for implementation details.

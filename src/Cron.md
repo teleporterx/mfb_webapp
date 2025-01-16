@@ -165,12 +165,11 @@ async def run_hourly_updates():
 This can be added to startup alongside the uvicorn server using the following logic
 
 ```python
-async def run_hourly_updates():
-    while True:
-        # Get all scheme documents
-        scheme_documents = await get_all_scheme_documents()
-        for scheme_document in scheme_documents:
-            # Sleep for 1 hour: before (more practical to not have updates on every startup)
-            await asyncio.sleep(3600)
-            await update_nav_and_total_cost(scheme_document)
+@app.on_event("startup")
+async def startup_event():
+    """
+    Startup event to run the hourly updates in the background.
+    """
+    logger.info("Starting hourly updates...")
+    asyncio.create_task(run_hourly_updates())
 ```

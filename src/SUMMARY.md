@@ -18,3 +18,4 @@
     - [Frontend Dockerfile](./4_Docker/4_2_FE_Dockerfile.md)
     - [Docker Compose](./4_Docker/4_3_Docker_Compose.md)
 - [Hourly NAV Update](./Cron.md)
+- [Deployment Fixes](./Deploy.md)

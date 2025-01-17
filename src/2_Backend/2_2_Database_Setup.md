@@ -2,6 +2,8 @@
 
 Since I'm using **MongoDB** with the Motor driver in an asynchronous environment, there’s no need for **traditional database migrations** like you would find in relational databases (such as SQL). MongoDB's schema-less nature gives me the flexibility to create and modify collections **on-the-fly** without needing strict migrations. This allows me to **dynamically adjust the database structure** as the **application evolves**.
 
+Heres a handy [Guide](https://docs.mongoengine.org/guide/migration.html) that talks about Documents migration in Mongo.
+
 Additionally, for alterations or manual modifications, I can use tools like the **Mongo Shell** or **MongoDB Compass** to interact with and modify the database as needed. These tools provide a simple way to manage collections, indexes, and documents directly.
 
 > MongoDB has been chosen as the database for this project because of its **simplicity** and **flexibility**.

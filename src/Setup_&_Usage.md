@@ -22,7 +22,13 @@ sudo pacman -Syu && sudo pacman -S docker docker-compose
 
 **Orchestration**
 
-- Copy over the following to `docker-compose.yml` on your deployment target
+- Copy over the following to `docker-compose.yml` on your deployment target.
+
+- If you are serving the App on a cloud instance, then make sure to replace the public IP of that instance in the following `docker-compose.yml` file. You will face CORS issues if this is not done.
+
+- Watch out for the port numbers!
+
+- For testing on localhost, no changes are necessary other than adding your RapidAPI key for the `Latest Mutal Fund Nav` service.
 
 ```yml
 services:
@@ -30,41 +36,51 @@ services:
     image: mongo:latest
     container_name: mongoose
     ports:
-      - "27017:27017"  # MongoDB default port
+      - "27017:27017"
     restart: unless-stopped
     volumes:
-      - mongoose_data:/data/db  # Persist MongoDB data
+      - mongoose_data:/data/db
+    networks:
+      - mfb-network
 
   mfb_webapp_backend:
     image: teleporterx/mfb_webapp_backend:latest
     container_name: mfb_webapp_backend
     ports:
-      - "8000:8000"  # Expose Uvicorn server
+      - "8000:8000"
     restart: unless-stopped
     environment:
       MONGO_URL: mongoose
+      # PUBLIC_FRONTEND_URL: "http://36.213.136.122:5000"  # Set the public frontend URL
+      PUBLIC_FRONTEND_URL: "http://localhost:5000"  # Set the public frontend URL
       JWT_SECRET_KEY: "mysupersecretjwtkey"
-      RAPID_MUT_FUND_KEY: "INSERTYOURAPIKEY" # Don't forget to do this
+      RAPID_MUT_FUND_KEY: "insertyourapikey"
       RAPID_URL: "https://latest-mutual-fund-nav.p.rapidapi.com"
     depends_on:
-      - mongoose  # Ensure MongoDB starts before the backend
+      - mongoose
+    networks:
+      - mfb-network  # Attach to custom network
 
   mfb_webapp_frontend:
-    # build:
-    #   context: ./  # Adjust the context path if the Dockerfile is in a subdirectory
-    #   dockerfile: Dockerfile  # Ensure this matches the frontend Dockerfile name
     image: teleporterx/mfb_webapp_frontend:latest
     container_name: mfb_webapp_frontend
     ports:
-      - "5000:5000"  # Expose Next.js dev server
+      - "5000:5000"
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_BACKEND_URL: "http://mfb_webapp_backend:8000"  # Ensure the frontend can access the backend
+      # NEXT_PUBLIC_BACKEND_URL: "http://36.213.136.122:8000"  # This will work inside the Docker network
+      NEXT_PUBLIC_BACKEND_URL: "http://localhost:8000"  # This will work inside the Docker network
     depends_on:
-      - mfb_webapp_backend  # Ensure backend starts before the frontend
+      - mfb_webapp_backend
+    networks:
+      - mfb-network  # Attach to custom network
 
 volumes:
-  mongoose_data:  # Define the named volume
+  mongoose_data:
+
+networks:
+  mfb-network:  # Define custom network
+    driver: bridge  # Use bridge driver for networking
 ```
 
 - Run the docker-compose on the same level as the `docker-compose.yml` file

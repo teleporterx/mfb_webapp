@@ -2,7 +2,7 @@
 
 This `mdbook` has been hosted to provide the documentation, setup and usage for the **Mutual Fund Broker Web Application with RapidAPI Integration** in a simplistic and programmatic manner.
 
-> If you want to dive right in and and test the application locally, refer [Setup & Usage](Setup_&_Usage.md)
+> If you want to dive right in and and test the application locally, refer [Setup & Usage](Setup_&_Usage.md) and visit `http://localhost:5000/login` after setup.
 
 - The **Frontend** and **Docker** sections are **greyed out** as they don't have a root page like [Backend](2_Backend/2_1_Feature_Map.md). The sub-sections are still accessible via the sidebar dropdown (`>`) option.
 
